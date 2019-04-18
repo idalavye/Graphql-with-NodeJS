@@ -49,11 +49,16 @@ app.use((req, res, next) => {
   next();
 });
 
+/**
+ * Grapql kullanabilmek için sadece post kullanmamız yeterli ama biz graphiql arayüzünü kullanmak istiyorsak get isteklerini
+ * de karşılamalıyız. Bu yüzden use kullandık.
+ */
 app.use(
   "/graphql",
   graphqlHttp({
     schema: schema,
-    rootValue: resolver
+    rootValue: resolver,
+    graphiql:true //
   })
 );
 
