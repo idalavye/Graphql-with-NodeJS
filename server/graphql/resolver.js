@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const validator = require("validator");
 
 const User = require("../models/user");
 
@@ -9,6 +10,23 @@ module.exports = {
      * async await kullanmadığımız zaman mutlaka return kullanmalıyız. Çünkü graphql promisedaki resolve u beklemez.
      * async await de is otomatik olarak await ile beklediği için return kullanmamız zorunlu değil.
      */
+
+    const errors = [];
+    if (!validator.isEmail(userInput.email)) {
+      errors.push({ message: "Email is invalid" });
+    }
+
+    if (
+      validator.isEmpty(userInput.password) ||
+      !validator.isLength(userInput.password, { min: 5 })
+    ) {
+      errors.push({ message: "Password too short" });
+    }
+
+    if (errors.length > 0) {
+      const error = new Error("Invalid Error");
+      throw error;
+    }
 
     const existingUser = await User.findOne({ email: userInput.email });
     if (existingUser) {
@@ -27,7 +45,7 @@ module.exports = {
      * ._doc ile mongoose un model ile bize sunmuş olduğu metadataları(metotları) istemedşğimizi sadece user ın fieldlerını
      * getirmesini istediğimizi belirtiyoruz.
      * _id yi daha sonradan tekrar dahil etmemizin sebebi ise _id yi string türüne çevirmek istediğimiz içindir. Çünkü graphql de
-     * object id kullanmamız hatalara neden olacaktır.
+     * object id kullanmamız hatalara neden olacaktırc.
      */
     return {
       ...createdUser._doc,
