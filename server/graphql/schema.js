@@ -45,6 +45,10 @@ module.exports = buildSchema(`
  {
 	"query": "{ hello { text views } }"
  }
+
+ mutation {
+  createUser(userInput: {email:"test",name:"ibrahim",password:"123"}) {_id,email}
+ }
  */
 /*
 module.exports = buildSchema(`

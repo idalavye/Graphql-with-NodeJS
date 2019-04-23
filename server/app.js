@@ -58,7 +58,24 @@ app.use(
   graphqlHttp({
     schema: schema,
     rootValue: resolver,
-    graphiql:true //
+    graphiql: true,
+    formatError(err) {
+      /**
+       * Original Error graphql içerisinde gelen bir değerdir. Kod içerisinde oluşan hatalar original error dur.
+       * Request body sinden gelen isteklerde yazım yanlışı varsa bunlar original error sayılmaz. Bu durumda return
+       * err diyerek grapql in kendi error response unu geri döndürüyoruz. Aksi takdirde kendi error mesajımızı
+       * return edicez.
+       */
+      if (!err.originalError) {
+        return err;
+      }
+
+      const data = err.originalError.data;
+      const message = err.message || "An error occurred";
+      const code = err.originalError.code || 500;
+
+      return { message: message, data: data, code: code };
+    }
   })
 );
 
@@ -71,9 +88,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    "mongodb://localhost:27017/shopapp"
-  )
+  .connect("mongodb://localhost:27017/shopapp")
   .then(result => {
     app.listen(8080);
   })
