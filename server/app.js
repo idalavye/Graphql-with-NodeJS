@@ -46,6 +46,16 @@ app.use((req, res, next) => {
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  /**
+   * Client post, put , delete isteklerinden önce birde option isteği atar. Ama grapql kullandığımız zaman
+   * server bu option isteğine karşılık vermez ve client bu methodun olmadığını sanar. Bu yüzden option isteği
+   * attığı zaman geriye 200 status code u return ediyoruz.
+   */
+  if (req.method === "OPTIONS") {
+    res.statusCode = 200;
+    return res.send();
+  }
   next();
 });
 
@@ -70,6 +80,7 @@ app.use(
         return err;
       }
 
+      return err;
       const data = err.originalError.data;
       const message = err.message || "An error occurred";
       const code = err.originalError.code || 500;

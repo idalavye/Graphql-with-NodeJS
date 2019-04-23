@@ -24,9 +24,9 @@ module.exports = {
     }
 
     if (errors.length > 0) {
-      const error = new Error("Invalid Input");
+      const error = new Error("Invalid Input ");
       error.data = errors;
-      error.code = 422;
+      error.code = "422";
       throw error;
     }
 
@@ -35,14 +35,14 @@ module.exports = {
       throw new Error("User exist already");
     }
 
-    const hashedPw = bcrypt.hash(userInput.password, 12);
+    const hashedPw = await bcrypt.hash(userInput.password, 12);
     const user = new User({
       email: userInput.email,
       password: hashedPw,
       name: userInput.name
     });
 
-    const createdUser = user.save();
+    const createdUser = await user.save();
     /**
      * ._doc ile mongoose un model ile bize sunmuş olduğu metadataları(metotları) istemedşğimizi sadece user ın fieldlerını
      * getirmesini istediğimizi belirtiyoruz.

@@ -23,7 +23,7 @@ module.exports = buildSchema(`
     input UserInputData {
         email: String!
         name: String!
-        password: String!
+        password: String
     }
 
     type RootMutation {

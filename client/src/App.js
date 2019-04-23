@@ -110,6 +110,9 @@ class App extends Component {
     event.preventDefault();
     this.setState({ authLoading: true });
     const graphqlQuery = {
+      /**
+       * Query mutationlar için bile gereklidir.
+       */
       query: `
         mutation {
           createUser(userInput: {email: "${
