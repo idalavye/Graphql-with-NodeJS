@@ -11,6 +11,7 @@ module.exports = {
      * async await de is otomatik olarak await ile beklediği için return kullanmamız zorunlu değil.
      */
 
+     
     const errors = [];
     if (!validator.isEmail(userInput.email)) {
       errors.push({ message: "Email is invalid" });
